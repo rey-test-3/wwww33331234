@@ -1,0 +1,20 @@
+on:
+  github:
+    branches:
+      only: master
+
+jobs:
+  job1:
+    uses: git-checkout@v1
+    with:
+      url: context.event.github.url
+      ref: context.event.github.ref
+    outputs:
+      ds:
+        type: dataset
+        with:
+          ref: dsrubq45x4ab07x
+
+defaults:
+  resources:
+    instance-type: C5

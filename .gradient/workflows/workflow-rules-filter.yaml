@@ -1,0 +1,21 @@
+on:
+  github:
+    branches:
+      only: development
+
+jobs:
+  input-output:
+    uses: git-checkout@v1
+    with:
+      url: context.repo
+      ref: context.ref
+    inputs:
+      vol2:
+        type: volume
+    outputs:
+      vol:
+        type: volume
+
+defaults:
+  resources:
+    instance-type: psdev-worker

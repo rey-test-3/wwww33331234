@@ -1,0 +1,20 @@
+on:
+  github:
+ branches:
+     only: master
+
+jobs:
+  input-output:
+    uses: git-checkout@v1
+    with:
+      url: https://github.com/e-r-i-k-a/tinyRepo
+    inputs:
+      vol2:
+        type: volume
+    outputs:
+      vol:
+        type: volume
+
+defaults:
+  resources:
+    instance-type: psdev-worker

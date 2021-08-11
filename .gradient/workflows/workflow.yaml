@@ -1,0 +1,52 @@
+on:
+  github:
+    branches:
+      only: master
+
+jobs:
+  ds:
+    uses: git-checkout@v1
+    with:
+      url: context.event.github.url
+      ref: context.event.github.ref
+    outputs:
+      ds:
+        type: dataset
+        with:
+          ref: dsrubq45x4ab07x
+  vol:
+    uses: git-checkout@v1
+    with:
+      url: context.event.github.url
+    outputs:
+      vol:
+        type: volume
+  path:
+    uses: git-checkout@v1
+    with:
+      url: context.event.github.url
+      path: /outputs/path
+    outputs:
+      ignore:
+        type: volume
+      path:
+        type: volume
+  test:
+    uses: container@v1
+    with:
+      args:
+        - bash
+        - "-c"
+        - "set -x; find /inputs && test -f /inputs/vol/README.md && test -f /inputs/ds/README.md && test -f /inputs/path/README.md"
+      image: bash:5
+    needs:
+      - vol
+      - ds
+      - path
+    inputs:
+      vol: vol.outputs.vol
+      ds: ds.outputs.ds
+      path: path.outputs.path
+defaults:
+  resources:
+    instance-type: C5

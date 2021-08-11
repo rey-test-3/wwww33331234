@@ -1,0 +1,52 @@
+on:
+  github:
+    branches:
+      only: master
+
+jobs:
+  ds:
+    uses: git-checkout@v1
+    with:
+      url: context.repo
+      ref: context.ref
+    outputs:
+      ds:
+        type: dataset
+        with:
+          id: dfsdfsdfsd
+  vol:
+    uses: git-checkout@v1
+    with:
+      url: context.repo
+    outputs:
+      vol:
+        type: volume
+  path:
+    uses: git-checkout@v1
+    with:
+      url: context.repo
+      path: /outputs/path
+    outputs:
+      ignore:
+        type: volume
+      path:
+        type: volume
+  test:
+    uses: container@v1
+    with:
+      args:
+        - bash
+        - "-c"
+        - "set -x; find /inputs && test -f /inputs/vol/README.md && test -f /inputs/ds/README.md && test -f /inputs/path/README.md"
+      image: bash:5
+    needs:
+      - vol
+      - ds
+      - path
+    inputs:
+      vol: vol.outputs.vol
+      ds: ds.outputs.ds
+      path: path.outputs.path
+defaults:
+  resources:
+    instance-type: psdev-worker
